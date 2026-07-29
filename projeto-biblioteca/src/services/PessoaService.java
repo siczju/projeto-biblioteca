@@ -12,44 +12,47 @@ public class PessoaService {
     private List<Pessoa> pessoas = new ArrayList<>();
     private String path = "C:\\Users\\JúlioCésar\\source\\github\\projeto-biblioteca\\projeto-biblioteca\\src\\arquivos\\pessoa.csv";
 
-    public void carregar(){
-        try(BufferedReader br = new BufferedReader(new FileReader(path))){
+    public void carregar() {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
             String line = br.readLine();
-            while(line != null){
+
+            while (line != null) {
                 String[] dados = line.split(";");
 
-                if(dados[0].equals("PROFESSOR")){
+                if (dados[0].equals("PROFESSOR")) {
                     Professor professor = new Professor(
                             Integer.parseInt(dados[3]), // id
                             dados[2], // nome
                             dados[4], // email
                             dados[1] // departamento
                     );
-                pessoas.add(professor);
+
+                    pessoas.add(professor);
                 }
-                else if(dados[0].equals("ALUNO")){
+                else if (dados[0].equals("ALUNO")) {
                     Aluno aluno = new Aluno(
                             Integer.parseInt(dados[3]), // id
                             dados[2], // nome
                             dados[4], // email
                             dados[1] // curso
                     );
-                pessoas.add(aluno);
+
+                    pessoas.add(aluno);
                 }
+
                 line = br.readLine();
             }
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
 
-    public void salvar(){
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(path))){
-            for (Pessoa pessoa : pessoas){
-                if(pessoa instanceof Professor)
+    public void salvar() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+            for (Pessoa pessoa : pessoas) {
+                if (pessoa instanceof Professor)
                     bw.write("PROFESSOR;" + ((Professor) pessoa).getDepartamento() + ";");
                 else
                     bw.write("ALUNO;" + ((Aluno) pessoa).getCurso() + ";");
@@ -57,11 +60,10 @@ public class PessoaService {
                 bw.write(pessoa.getNome() + ";" +
                         pessoa.getId() + ";" +
                         pessoa.getEmail()
-                        );
+                );
                 bw.newLine();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -78,14 +80,14 @@ public class PessoaService {
         return maiorId + 1;
     }
 
-    public List<Pessoa> getPessoas(){
+    public List<Pessoa> getPessoas() {
         carregar();
         return pessoas;
     }
 
-    public void removerProfessor(int id){
+    public void removerProfessor(Integer id) {
         Pessoa pessoa = pessoas.stream()
-                .filter(x -> x.getId() == id)
+                .filter(x -> x.getId().equals(id))
                 .findFirst()
                 .orElse(null);
 
@@ -99,7 +101,7 @@ public class PessoaService {
         }
     }
 
-    public void removerAluno(int id){
+    public void removerAluno(int id) {
         Pessoa pessoa = pessoas.stream()
                 .filter(x -> x.getId() == id)
                 .findFirst()
@@ -115,21 +117,21 @@ public class PessoaService {
         }
     }
 
-    public void adicionarProfessor(Professor professor){
+    public void adicionarProfessor(Professor professor) {
         pessoas.add(professor);
     }
 
-    public void adicionarAluno(Aluno aluno){
+    public void adicionarAluno(Aluno aluno) {
         pessoas.add(aluno);
     }
 
-    public void exibirAluno(){
+    public void exibirAluno() {
         for (Pessoa pessoa : pessoas)
             if (pessoa instanceof Aluno)
                 System.out.println(pessoa);
     }
 
-    public void exibirProfessor(){
+    public void exibirProfessor() {
         for (Pessoa pessoa : pessoas)
             if (pessoa instanceof Professor)
                 System.out.println(pessoa);
