@@ -3,8 +3,8 @@ package entidades;
 public class Aluno extends Pessoa {
     private String curso;
 
-    public Aluno(Integer id, String nome, String email, String curso) {
-        super(id, nome, email);
+    public Aluno(String nome, String email, String curso) {
+        super(nome, email);
         this.curso = curso;
     }
 
@@ -20,7 +20,6 @@ public class Aluno extends Pessoa {
     public String toString() {
         return "Aluno: " + getNome() + "\n" +
                 "Email: " + getEmail() + "\n" +
-                "Curso: " + curso + '\n' +
-                "Id: " + getId() + "\n";
+                "Curso: " + curso + '\n';
     }
 }

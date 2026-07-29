@@ -1,6 +1,7 @@
 package aplicacao;
 
 import entidades.Aluno;
+import entidades.Diretor;
 import entidades.Livro;
 import entidades.Professor;
 import enums.LivroStatus;
@@ -69,7 +70,7 @@ public class Program {
             return;
         else if(opcao == 1) {
             System.out.println("\nExibir livros:\n");
-            livroService.exibirLivros();
+            livroService.exibir();
         }
         else if(opcao == 2){
             System.out.println("\nAdicionar livro\n");
@@ -87,7 +88,7 @@ public class Program {
 
             if(livroStatus.equals("EMPRESTADO") || livroStatus.equals("DISPONIVEL")) {
                 LivroStatus enumLivro = LivroStatus.valueOf(livroStatus);
-                livroService.adicionarLivros(new Livro(nome, autor, qtdLinha, livroService.gerarId(), enumLivro));
+                livroService.adicionar(new Livro(nome, autor, qtdLinha, enumLivro));
                 System.out.println("\nLivro adicionado com sucesso!");
             }
             else
@@ -95,11 +96,10 @@ public class Program {
         }
         else if(opcao == 3){
             System.out.println("\nRemover livro!!!!!!!!");
-            System.out.print("Qual o ID do Livro a ser removido? ");
-            int idLivro = sc.nextInt();
-            sc.nextLine();
+            System.out.print("Qual o nome do Livro a ser removido? ");
+            String nome = sc.nextLine();
 
-            livroService.removerLivros(idLivro);
+            livroService.remover(nome);
         }
         else
             System.out.println("Essa opção não existe.");
@@ -120,20 +120,17 @@ public class Program {
         if (opcaoPessoa == 0)
             return;
         else if (opcaoPessoa == 1) {
-            System.out.print("Listar Alunos ou Professores (a/p): ");
+            System.out.print("Listar Alunos, Professores ou Diretores (a/p/d): ");
             char opcaoTipoPessoa = sc.nextLine().toLowerCase().charAt(0);
 
-            if (opcaoTipoPessoa == 'a') {
-                pessoaService.exibirAluno();
-            } else if (opcaoTipoPessoa == 'p') {
-                pessoaService.exibirProfessor();
-            } else {
+            if (opcaoTipoPessoa == 'a' || opcaoTipoPessoa == 'p' || opcaoTipoPessoa == 'd')
+                pessoaService.exibir(opcaoTipoPessoa);
+            else
                 System.out.println("Essa opção não existe.");
-            }
         }
 
         else if (opcaoPessoa == 2) {
-            System.out.print("Adicionar Aluno ou Professor (a/p): ");
+            System.out.print("Adicionar Aluno, Professor ou Diretor (a/p/d): ");
             char opcaoTipoPessoa = sc.nextLine().toLowerCase().charAt(0);
 
             if (opcaoTipoPessoa == 'a') {
@@ -146,7 +143,7 @@ public class Program {
                 System.out.print("Curso do aluno: ");
                 String curso = sc.nextLine();
 
-                pessoaService.adicionarAluno(new Aluno(pessoaService.gerarId(), nome, email, curso));
+                pessoaService.adicionar(new Aluno(nome, email, curso));
 
             } else if (opcaoTipoPessoa == 'p') {
                 System.out.print("Nome do professor: ");
@@ -158,34 +155,28 @@ public class Program {
                 System.out.print("Departamento do professor: ");
                 String departamento = sc.nextLine();
 
-                pessoaService.adicionarProfessor(new Professor(pessoaService.gerarId(), nome, email, departamento));
+                pessoaService.adicionar(new Professor(nome, email, departamento));
 
-            } else {
+            }else if (opcaoTipoPessoa == 'd') {
+                System.out.print("Nome do diretor: ");
+                String nome = sc.nextLine();
+
+                System.out.print("Email do diretor: ");
+                String email = sc.nextLine();
+
+                pessoaService.adicionar(new Diretor(nome, email));
+            }else {
                 System.out.println("Essa opção não existe.");
             }
         }
 
         else if (opcaoPessoa == 3) {
-            System.out.print("Remover Aluno ou Professor (a/p): ");
-            char opcaoTipoPessoa = sc.nextLine().toLowerCase().charAt(0);
+            System.out.print("Remover pessoa (Aluno/Professor/Diretor): ");
 
-            if (opcaoTipoPessoa == 'a') {
-                System.out.print("Qual o ID do Aluno? ");
-                int idAluno = sc.nextInt();
-                sc.nextLine();
+            System.out.print("Qual o Email da Pessoa? ");
+            String email = sc.nextLine();
 
-                pessoaService.removerAluno(idAluno);
-
-            } else if (opcaoTipoPessoa == 'p') {
-                System.out.print("Qual o ID do Professor? ");
-                int idProfessor = sc.nextInt();
-                sc.nextLine();
-
-                pessoaService.removerProfessor(idProfessor);
-
-            } else {
-                System.out.println("Essa opção não existe.");
-            }
+            pessoaService.remover(email);
         }
     }
 }

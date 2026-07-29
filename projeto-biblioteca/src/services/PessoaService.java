@@ -1,6 +1,7 @@
 package services;
 
 import entidades.Aluno;
+import entidades.Diretor;
 import entidades.Pessoa;
 import entidades.Professor;
 
@@ -22,9 +23,8 @@ public class PessoaService {
 
                 if (dados[0].equals("PROFESSOR")) {
                     Professor professor = new Professor(
-                            Integer.parseInt(dados[3]), // id
                             dados[2], // nome
-                            dados[4], // email
+                            dados[3], // email
                             dados[1] // departamento
                     );
 
@@ -32,13 +32,18 @@ public class PessoaService {
                 }
                 else if (dados[0].equals("ALUNO")) {
                     Aluno aluno = new Aluno(
-                            Integer.parseInt(dados[3]), // id
                             dados[2], // nome
-                            dados[4], // email
+                            dados[3], // email
                             dados[1] // curso
                     );
-
                     pessoas.add(aluno);
+                }
+                else if (dados[0].equals("DIRETOR")) {
+                        Diretor diretor = new Diretor(
+                                dados[1], // nome
+                                dados[2] // email
+                        );
+                    pessoas.add(diretor);
                 }
 
                 line = br.readLine();
@@ -54,11 +59,12 @@ public class PessoaService {
             for (Pessoa pessoa : pessoas) {
                 if (pessoa instanceof Professor)
                     bw.write("PROFESSOR;" + ((Professor) pessoa).getDepartamento() + ";");
-                else
+                else if(pessoa instanceof Aluno)
                     bw.write("ALUNO;" + ((Aluno) pessoa).getCurso() + ";");
+                else
+                    bw.write("DIRETOR;");
 
                 bw.write(pessoa.getNome() + ";" +
-                        pessoa.getId() + ";" +
                         pessoa.getEmail()
                 );
                 bw.newLine();
@@ -68,72 +74,38 @@ public class PessoaService {
         }
     }
 
-    public int gerarId() {
-        int maiorId = 0;
-
-        for (Pessoa pessoa : pessoas) {
-            if (pessoa.getId() > maiorId) {
-                maiorId = pessoa.getId();
-            }
-        }
-
-        return maiorId + 1;
-    }
-
-    public List<Pessoa> getPessoas() {
-        carregar();
-        return pessoas;
-    }
-
-    public void removerProfessor(Integer id) {
+    public void remover(String email) {
         Pessoa pessoa = pessoas.stream()
-                .filter(x -> x.getId().equals(id))
+                .filter(x -> x.getEmail().equals(email))
                 .findFirst()
                 .orElse(null);
 
         if (pessoa == null)
-            System.out.println("Este Professor não existe!");
-        else if (pessoa instanceof Aluno)
-            System.out.println("É um Aluno, não um Professor!");
+            System.out.println("Esta pessoa não existe!");
         else {
+            System.out.println(pessoa.getNome() + " excluído (a) com sucesso!");
             pessoas.remove(pessoa);
-            System.out.println("Professor excluído com sucesso!");
         }
     }
 
-    public void removerAluno(int id) {
-        Pessoa pessoa = pessoas.stream()
-                .filter(x -> x.getId() == id)
-                .findFirst()
-                .orElse(null);
-
-        if (pessoa == null)
-            System.out.println("Este Aluno não existe!");
-        else if (pessoa instanceof Professor)
-            System.out.println("É um Professor, não um Aluno!");
-        else {
-            pessoas.remove(pessoa);
-            System.out.println("Aluno excluído com sucesso!");
-        }
-    }
-
-    public void adicionarProfessor(Professor professor) {
+    public void adicionar(Pessoa professor) {
         pessoas.add(professor);
     }
 
-    public void adicionarAluno(Aluno aluno) {
-        pessoas.add(aluno);
-    }
-
-    public void exibirAluno() {
-        for (Pessoa pessoa : pessoas)
-            if (pessoa instanceof Aluno)
-                System.out.println(pessoa);
-    }
-
-    public void exibirProfessor() {
-        for (Pessoa pessoa : pessoas)
-            if (pessoa instanceof Professor)
-                System.out.println(pessoa);
+    public void exibir(char opcao) {
+        for (Pessoa pessoa : pessoas) {
+            if (opcao == 'a') {
+                if (pessoa instanceof Aluno)
+                    System.out.println(pessoa);
+            }
+            else if (opcao == 'p') {
+                if (pessoa instanceof Professor)
+                    System.out.println(pessoa);
+            }
+            else {
+                if (pessoa instanceof Diretor)
+                    System.out.println(pessoa);
+            }
+        }
     }
 }
