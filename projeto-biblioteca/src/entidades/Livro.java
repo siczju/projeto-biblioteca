@@ -52,7 +52,7 @@ public class Livro {
         return
                 "Nome: " + nome + '\n' +
                 "Autor: " + autor + '\n' +
-                "Quantidade de linhas: " + linhas + '\n' +
+                "Quantidade de paginas: " + linhas + '\n' +
                 "Status do livro: " + livroStatus + "\n";
     }
 }

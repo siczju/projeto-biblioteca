@@ -1,12 +1,11 @@
 package aplicacao;
 
-import entidades.Aluno;
-import entidades.Diretor;
-import entidades.Livro;
-import entidades.Professor;
+import entidades.*;
 import enums.LivroStatus;
+import services.EmprestimoService;
 import services.LivroService;
 import services.PessoaService;
+
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -14,12 +13,13 @@ public class Program {
 
     public static PessoaService pessoaService = new PessoaService();
     public static LivroService livroService = new LivroService();
+    public static EmprestimoService emprestimoService = new EmprestimoService();
 
     public static void main(String[] args) {
         Locale.setDefault(Locale.US);
         Scanner scanner = new Scanner(System.in);
-        pessoaService.carregar();
-        livroService.carregar();
+
+        emprestimoService.carregar(pessoaService.carregar(), livroService.carregar());
 
         while (true) {
 
@@ -29,14 +29,14 @@ public class Program {
                 scanner.close();
                 pessoaService.salvar();
                 livroService.salvar();
+                emprestimoService.salvar();
                 break;
-            }
-            else if (opcao == 1) {
+            } else if (opcao == 1)
                 menuPessoas(scanner);
-            }
-            else if (opcao == 2) {
+            else if (opcao == 2)
                 menuLivros(scanner);
-            }
+            else if(opcao == 3)
+                menuEmprestimo(scanner);
             else
                 System.out.println("Essa opção não existe.");
         }
@@ -46,7 +46,7 @@ public class Program {
         System.out.println("------------------MENU------------------");
         System.out.println("\t1 - Pessoas");
         System.out.println("\t2 - Livros");
-        System.out.println("\t3 - Pegar emprestado");
+        System.out.println("\t3 - Emprestimo");
         System.out.println("\t0 - Sair/Salvar");
         System.out.print("\nOpção: ");
 
@@ -56,7 +56,45 @@ public class Program {
         return opcao;
     }
 
-    public static void menuLivros(Scanner sc){
+    private static void menuEmprestimo(Scanner sc) {
+        System.out.println("\n------EMPRESTIMOS------");
+        System.out.println("\t1 - Listar");
+        System.out.println("\t2 - Emprestar");
+        System.out.println("\t3 - Devolver");
+        System.out.println("\t0 - Sair");
+        System.out.print("\nOpção: ");
+
+        int opcao = sc.nextInt();
+        sc.nextLine();
+
+        if (opcao == 0)
+            System.out.println("Saindo");
+        else if (opcao == 1) {
+            System.out.println("\nLISTANDO EMPRESTIMOS!");
+            emprestimoService.exibir();
+        } else if (opcao == 2) {
+            System.out.println("\nEMPRESTANDO LIVRO!");
+            System.out.print("Email da pessoa que vai pegar o livro emprestado: ");
+            String email = sc.nextLine();
+            System.out.print("Nome do livro a ser emprestado: ");
+            String nomeLivro = sc.nextLine();
+
+            Pessoa pessoa = pessoaService.procurarPessoa(email);
+            Livro livro = livroService.procurarLivro(nomeLivro);
+            emprestimoService.emprestar(pessoa, livro);
+        } else if (opcao == 3){
+            System.out.println("DEVOLVENDO LIVRO!");
+            System.out.print("Nome do livro a ser devolvido: ");
+            String nomeLivro = sc.nextLine();
+
+            emprestimoService.devolver(nomeLivro);
+        }
+        else
+            System.out.println("Essa opção não existe!");
+
+    }
+
+    private static void menuLivros(Scanner sc) {
         System.out.println("\n------LIVROS------");
         System.out.println("\t1 - Listar");
         System.out.println("\t2 - Adicionar");
@@ -66,13 +104,12 @@ public class Program {
 
         int opcao = sc.nextInt();
         sc.nextLine();
-        if(opcao == 0)
-            return;
-        else if(opcao == 1) {
+        if (opcao == 0)
+            System.out.println("Saindo");
+        else if (opcao == 1) {
             System.out.println("\nExibir livros:\n");
             livroService.exibir();
-        }
-        else if(opcao == 2){
+        } else if (opcao == 2) {
             System.out.println("\nAdicionar livro\n");
 
             System.out.print("Nome: ");
@@ -86,22 +123,19 @@ public class Program {
             System.out.print("Status do livro (EMPRESTADO/DISPONIVEL): ");
             String livroStatus = sc.nextLine();
 
-            if(livroStatus.equals("EMPRESTADO") || livroStatus.equals("DISPONIVEL")) {
+            if (livroStatus.equals("EMPRESTADO") || livroStatus.equals("DISPONIVEL")) {
                 LivroStatus enumLivro = LivroStatus.valueOf(livroStatus);
                 livroService.adicionar(new Livro(nome, autor, qtdLinha, enumLivro));
                 System.out.println("\nLivro adicionado com sucesso!");
-            }
-            else
+            } else
                 System.out.println("Esse status não existe!");
-        }
-        else if(opcao == 3){
+        } else if (opcao == 3) {
             System.out.println("\nRemover livro!!!!!!!!");
             System.out.print("Qual o nome do Livro a ser removido? ");
             String nome = sc.nextLine();
 
             livroService.remover(nome);
-        }
-        else
+        } else
             System.out.println("Essa opção não existe.");
 
     }
@@ -118,7 +152,7 @@ public class Program {
         sc.nextLine();
 
         if (opcaoPessoa == 0)
-            return;
+            System.out.println("Saindo");
         else if (opcaoPessoa == 1) {
             System.out.print("Listar Alunos, Professores ou Diretores (a/p/d): ");
             char opcaoTipoPessoa = sc.nextLine().toLowerCase().charAt(0);
@@ -127,9 +161,7 @@ public class Program {
                 pessoaService.exibir(opcaoTipoPessoa);
             else
                 System.out.println("Essa opção não existe.");
-        }
-
-        else if (opcaoPessoa == 2) {
+        } else if (opcaoPessoa == 2) {
             System.out.print("Adicionar Aluno, Professor ou Diretor (a/p/d): ");
             char opcaoTipoPessoa = sc.nextLine().toLowerCase().charAt(0);
 
@@ -157,7 +189,7 @@ public class Program {
 
                 pessoaService.adicionar(new Professor(nome, email, departamento));
 
-            }else if (opcaoTipoPessoa == 'd') {
+            } else if (opcaoTipoPessoa == 'd') {
                 System.out.print("Nome do diretor: ");
                 String nome = sc.nextLine();
 
@@ -165,12 +197,10 @@ public class Program {
                 String email = sc.nextLine();
 
                 pessoaService.adicionar(new Diretor(nome, email));
-            }else {
+            } else {
                 System.out.println("Essa opção não existe.");
             }
-        }
-
-        else if (opcaoPessoa == 3) {
+        } else if (opcaoPessoa == 3) {
             System.out.print("Remover pessoa (Aluno/Professor/Diretor): ");
 
             System.out.print("Qual o Email da Pessoa? ");
