@@ -8,6 +8,11 @@ public class Professor extends Pessoa {
         this.departamento = departamento;
     }
 
+    @Override
+    public int quantidadeDeEmprestimosPossiveis(){
+        return 3;
+    }
+
     public String getDepartamento() {
         return departamento;
     }

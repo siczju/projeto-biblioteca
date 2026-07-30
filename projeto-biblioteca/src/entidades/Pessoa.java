@@ -1,6 +1,8 @@
 package entidades;
 
-public class Pessoa {
+import services.ValidacaoEmprestimoService;
+
+public class Pessoa implements ValidacaoEmprestimoService {
     private String nome;
     private String email;
 
@@ -9,6 +11,11 @@ public class Pessoa {
     public Pessoa(String nome, String email) {
         this.nome = nome;
         this.email = email;
+    }
+
+    @Override
+    public int quantidadeDeEmprestimosPossiveis() {
+        return 2;
     }
 
     public String getNome() {
@@ -26,4 +33,5 @@ public class Pessoa {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

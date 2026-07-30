@@ -8,6 +8,11 @@ public class Aluno extends Pessoa {
         this.curso = curso;
     }
 
+    @Override
+    public int quantidadeDeEmprestimosPossiveis(){
+        return 2;
+    }
+
     public String getCurso() {
         return curso;
     }

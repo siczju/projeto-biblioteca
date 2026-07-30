@@ -10,6 +10,11 @@ public class Diretor extends Pessoa {
     }
 
     @Override
+    public int quantidadeDeEmprestimosPossiveis(){
+        return 4;
+    }
+
+    @Override
     public String toString() {
         return "Nome: " + getNome() + "\n" +
                 "Email: " + getEmail() + "\n";

@@ -1,6 +1,7 @@
 package entidades;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Emprestimo {
     private LocalDate diaEmprestimo;
@@ -52,7 +53,7 @@ public class Emprestimo {
         return
                 "Pessoa que emprestamos: " + pessoa.getNome() + "\n" +
                 "Livro emprestado: " + livro.getNome() + "\n" +
-                "Dia que ocorreu o emprestimo: " + diaEmprestimo + "\n" +
-                "Dia que vai vencer o emprestimo: " + diaVencimento + "\n";
+                "Dia que ocorreu o emprestimo: " + diaEmprestimo.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
+                "Dia que vai vencer o emprestimo: " + diaVencimento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n";
     }
 }

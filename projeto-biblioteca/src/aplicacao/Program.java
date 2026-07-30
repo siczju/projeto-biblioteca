@@ -73,6 +73,7 @@ public class Program {
             System.out.println("\nLISTANDO EMPRESTIMOS!");
             emprestimoService.exibir();
         } else if (opcao == 2) {
+
             System.out.println("\nEMPRESTANDO LIVRO!");
             System.out.print("Email da pessoa que vai pegar o livro emprestado: ");
             String email = sc.nextLine();

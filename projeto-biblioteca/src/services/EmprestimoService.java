@@ -24,8 +24,8 @@ public class EmprestimoService {
                 LocalDate diaEmprestimo = LocalDate.parse(dados[2], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 LocalDate diaVencimento = LocalDate.parse(dados[3], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-                Pessoa pessoa = pessoas.stream().filter(p -> p.getEmail() == dados[0]).findFirst().orElse(null);
-                Livro livro = livros.stream().filter(l -> l.getNome() == dados[1]).findFirst().orElse(null);
+                Pessoa pessoa = pessoas.stream().filter(p -> p.getEmail().equals(dados[0])).findFirst().orElse(null);
+                Livro livro = livros.stream().filter(l -> l.getNome().equals(dados[1])).findFirst().orElse(null);
 
                 emprestimos.add(new Emprestimo(diaEmprestimo, diaVencimento, livro, pessoa));
 
@@ -63,10 +63,15 @@ public class EmprestimoService {
 
     public void emprestar(Pessoa pessoa, Livro livro){
         LocalDate diaVencimento = LocalDate.now().plusDays(5);
+        long qtdEmprestimo = emprestimos.stream().filter(e -> e.getPessoa().getNome().equals(pessoa.getNome())).count();
+
         if(livro == null)
             System.out.println("Não emprestado pois livro não existe.");
         else if (pessoa == null)
             System.out.println("Não emprestado pois pessoa não existe");
+        else if(pessoa.quantidadeDeEmprestimosPossiveis() <= qtdEmprestimo){
+            System.out.println("Essa pessoa ja atingiu o máximo de emprestimos!!");
+        }
         else {
             livro.setLivroStatus(LivroStatus.EMPRESTADO);
             emprestimos.add(new Emprestimo(LocalDate.now(), diaVencimento, livro, pessoa));
@@ -75,6 +80,7 @@ public class EmprestimoService {
     }
 
     public void devolver(String nomeDoLivro){
+
         Emprestimo emprestimoDevolvido = emprestimos
                 .stream().
                 filter(e -> e.getLivro().getNome().equals(nomeDoLivro)).
@@ -82,6 +88,7 @@ public class EmprestimoService {
 
         if(emprestimoDevolvido != null) {
             emprestimoDevolvido.getLivro().setLivroStatus(LivroStatus.DISPONIVEL);
+            emprestimos.remove(emprestimoDevolvido);
             System.out.println("\nEmprestimo devolvido!");
         }
         else
