@@ -15,7 +15,7 @@ public class Pessoa implements ValidacaoEmprestimoService {
 
     @Override
     public int quantidadeDeEmprestimosPossiveis() {
-        return 2;
+        return 0;
     }
 
     public String getNome() {
