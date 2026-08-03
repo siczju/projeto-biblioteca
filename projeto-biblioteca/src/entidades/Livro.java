@@ -5,13 +5,13 @@ import enums.LivroStatus;
 public class Livro {
     private String nome;
     private String autor;
-    private Integer linhas;
+    private Integer paginas;
     private LivroStatus livroStatus;
 
-    public Livro(String nome, String autor, Integer linhas, LivroStatus livroStatus) {
+    public Livro(String nome, String autor, Integer paginas, LivroStatus livroStatus) {
         this.nome = nome;
         this.autor = autor;
-        this.linhas = linhas;
+        this.paginas = paginas;
         this.livroStatus = livroStatus;
     }
     
@@ -39,20 +39,16 @@ public class Livro {
         this.autor = autor;
     }
 
-    public Integer getLinhas() {
-        return linhas;
+    public Integer getPaginas() {
+        return paginas;
     }
 
     public void setLinhas(Integer linhas) {
-        this.linhas = linhas;
+        this.paginas = linhas;
     }
 
     @Override
     public String toString() {
-        return
-                "Nome: " + nome + '\n' +
-                "Autor: " + autor + '\n' +
-                "Quantidade de paginas: " + linhas + '\n' +
-                "Status do livro: " + livroStatus + "\n";
+        return nome + ", " + autor + ", " + paginas + ", " + livroStatus + "\n";
     }
 }

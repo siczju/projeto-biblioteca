@@ -4,23 +4,22 @@ import entidades.Livro;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import enums.LivroStatus;
 
 public class LivroService {
 
-    private List<Livro> livros = new ArrayList<>();
+    private Map<String, Livro> livros = new HashMap<>();
     private final String path = "C:\\Users\\JúlioCésar\\source\\github\\projeto-biblioteca\\projeto-biblioteca\\src\\arquivos\\livro.csv";
 
     public Livro procurarLivro(String nome) {
-        return livros.stream()
-                .filter(l -> l.getNome().equals(nome))
-                .findFirst()
-                .orElse(null);
+        return livros.get(nome);
     }
 
-    public List<Livro> carregar() {
+    public Map<String, Livro> carregar() {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
             String line = br.readLine();
@@ -34,7 +33,7 @@ public class LivroService {
                         LivroStatus.valueOf(dados[3])
                 );
 
-                livros.add(livro);
+                livros.put(livro.getNome(), livro);
                 line = br.readLine();
             }
         } catch (IOException e) {
@@ -45,10 +44,10 @@ public class LivroService {
 
     public void salvar() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
-            for (Livro livro : livros) {
+            for (Livro livro : livros.values()) {
                 bw.write(livro.getNome() + ";" +
                         livro.getAutor() + ";" +
-                        livro.getLinhas() + ";" +
+                        livro.getPaginas() + ";" +
                         livro.getLivroStatus().name()
                 );
                 bw.newLine();
@@ -59,27 +58,24 @@ public class LivroService {
     }
 
     public void remover(String nome) {
-        Livro livro = livros.stream()
-                .filter(x -> x.getNome().equals(nome))
-                .findFirst()
-                .orElse(null);
+        Livro livro = livros.get(nome);
 
         if (livro == null)
             System.out.println("Este livro não existe!");
         else {
-            livros.remove(livro);
+            livros.remove(nome);
             System.out.println("Livro excluído com sucesso!");
         }
     }
 
     public void exibir() {
-        for (Livro livro : livros) {
+        for (Livro livro : livros.values()) {
             System.out.println(livro);
         }
     }
 
     public void adicionar(Livro livro) {
-        livros.add(livro);
+        livros.put(livro.getNome(), livro);
     }
 
 }

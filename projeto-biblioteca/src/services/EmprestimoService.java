@@ -10,12 +10,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EmprestimoService {
     List<Emprestimo> emprestimos = new ArrayList<>();
     private String path = "C:\\Users\\JúlioCésar\\source\\github\\projeto-biblioteca\\projeto-biblioteca\\src\\arquivos\\emprestimo.csv";
 
-    public void carregar(List<Pessoa> pessoas, List<Livro> livros) {
+    public void carregar(Map<String, Pessoa> pessoas, Map<String, Livro> livros) {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line = br.readLine();
 
@@ -24,8 +25,8 @@ public class EmprestimoService {
                 LocalDate diaEmprestimo = LocalDate.parse(dados[2], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 LocalDate diaVencimento = LocalDate.parse(dados[3], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-                Pessoa pessoa = pessoas.stream().filter(p -> p.getEmail().equals(dados[0])).findFirst().orElse(null);
-                Livro livro = livros.stream().filter(l -> l.getNome().equals(dados[1])).findFirst().orElse(null);
+                Pessoa pessoa = pessoas.get(dados[0]);
+                Livro livro = livros.get(dados[1]);
 
                 emprestimos.add(new Emprestimo(diaEmprestimo, diaVencimento, livro, pessoa));
 

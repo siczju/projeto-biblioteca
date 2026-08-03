@@ -7,20 +7,19 @@ import entidades.Professor;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PessoaService {
-    private List<Pessoa> pessoas = new ArrayList<>();
+    private Map<String, Pessoa> pessoas = new HashMap<>();
     private final String path = "C:\\Users\\JúlioCésar\\source\\github\\projeto-biblioteca\\projeto-biblioteca\\src\\arquivos\\pessoa.csv";
 
     public Pessoa procurarPessoa(String email) {
-        return pessoas.stream()
-                .filter(p -> p.getEmail().equals(email))
-                .findFirst()
-                .orElse(null);
+        return pessoas.get(email);
     }
 
-    public List<Pessoa> carregar() {
+    public Map<String, Pessoa> carregar() {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
             String line = br.readLine();
@@ -35,20 +34,23 @@ public class PessoaService {
                             dados[1] // departamento
                     );
 
-                    pessoas.add(professor);
+                    pessoas.put(professor.getEmail(), professor);
+
                 } else if (dados[0].equals("ALUNO")) {
                     Aluno aluno = new Aluno(
                             dados[2], // nome
                             dados[3], // email
                             dados[1] // curso
                     );
-                    pessoas.add(aluno);
+
+                    pessoas.put(aluno.getEmail(), aluno);
+
                 } else if (dados[0].equals("DIRETOR")) {
                     Diretor diretor = new Diretor(
                             dados[1], // nome
                             dados[2] // email
                     );
-                    pessoas.add(diretor);
+                    pessoas.put(diretor.getEmail(), diretor);
                 }
 
                 line = br.readLine();
@@ -61,7 +63,7 @@ public class PessoaService {
 
     public void salvar() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
-            for (Pessoa pessoa : pessoas) {
+            for (Pessoa pessoa : pessoas.values()) {
                 if (pessoa instanceof Professor)
                     bw.write("PROFESSOR;" + ((Professor) pessoa).getDepartamento() + ";");
                 else if (pessoa instanceof Aluno)
@@ -80,25 +82,25 @@ public class PessoaService {
     }
 
     public void remover(String email) {
-        Pessoa pessoa = pessoas.stream()
-                .filter(x -> x.getEmail().equals(email))
-                .findFirst()
-                .orElse(null);
+        Pessoa pessoa = pessoas.get(email);
 
         if (pessoa == null)
             System.out.println("Esta pessoa não existe!");
         else {
             System.out.println(pessoa.getNome() + " excluído (a) com sucesso!");
-            pessoas.remove(pessoa);
+            pessoas.remove(email);
         }
     }
 
     public void adicionar(Pessoa professor) {
-        pessoas.add(professor);
+        if(pessoas.containsKey(professor.getEmail()))
+            System.out.println("Esse professor ja existe!");
+        else
+            pessoas.put(professor.getEmail(), professor);
     }
 
     public void exibir(char opcao) {
-        for (Pessoa pessoa : pessoas) {
+        for (Pessoa pessoa : pessoas.values()) {
             if (opcao == 'a') {
                 if (pessoa instanceof Aluno)
                     System.out.println(pessoa);

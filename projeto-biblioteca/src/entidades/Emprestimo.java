@@ -50,10 +50,8 @@ public class Emprestimo {
 
     @Override
     public String toString() {
-        return
-                "Pessoa que emprestamos: " + pessoa.getNome() + "\n" +
-                "Livro emprestado: " + livro.getNome() + "\n" +
-                "Dia que ocorreu o emprestimo: " + diaEmprestimo.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
-                "Dia que vai vencer o emprestimo: " + diaVencimento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n";
+        return pessoa.getNome() + " pegou emprestado: " + livro.getNome() + ". Em: " +
+                diaEmprestimo.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " á " +
+                diaVencimento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n";
     }
 }

@@ -117,19 +117,13 @@ public class Program {
             String nome = sc.nextLine();
             System.out.print("Autor: ");
             String autor = sc.nextLine();
-            System.out.print("Quantidade de linhas: ");
-            int qtdLinha = sc.nextInt();
+            System.out.print("Quantidade de paginas: ");
+            int qtdPaginas = sc.nextInt();
             sc.nextLine();
 
-            System.out.print("Status do livro (EMPRESTADO/DISPONIVEL): ");
-            String livroStatus = sc.nextLine();
+            livroService.adicionar(new Livro(nome, autor, qtdPaginas, LivroStatus.valueOf("DISPONIVEL")));
+            System.out.println("\nLivro adicionado com sucesso!");
 
-            if (livroStatus.equals("EMPRESTADO") || livroStatus.equals("DISPONIVEL")) {
-                LivroStatus enumLivro = LivroStatus.valueOf(livroStatus);
-                livroService.adicionar(new Livro(nome, autor, qtdLinha, enumLivro));
-                System.out.println("\nLivro adicionado com sucesso!");
-            } else
-                System.out.println("Esse status não existe!");
         } else if (opcao == 3) {
             System.out.println("\nRemover livro!!!!!!!!");
             System.out.print("Qual o nome do Livro a ser removido? ");
@@ -202,7 +196,7 @@ public class Program {
                 System.out.println("Essa opção não existe.");
             }
         } else if (opcaoPessoa == 3) {
-            System.out.print("Remover pessoa (Aluno/Professor/Diretor): ");
+            System.out.println("Remover pessoa!!! ");
 
             System.out.print("Qual o Email da Pessoa? ");
             String email = sc.nextLine();
