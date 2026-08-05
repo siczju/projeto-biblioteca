@@ -100,17 +100,15 @@ public class PessoaService {
     }
 
     public void exibir(char opcao) {
-        for (Pessoa pessoa : pessoas.values()) {
-            if (opcao == 'a') {
-                if (pessoa instanceof Aluno)
-                    System.out.println(pessoa);
-            } else if (opcao == 'p') {
-                if (pessoa instanceof Professor)
-                    System.out.println(pessoa);
-            } else {
-                if (pessoa instanceof Diretor)
-                    System.out.println(pessoa);
-            }
+        if (opcao == 'a') {
+            pessoas.values().stream().filter(p -> p instanceof Aluno).forEach(System.out::println);
+
+        } else if (opcao == 'p') {
+            pessoas.values().stream().filter(p -> p instanceof Professor).forEach(System.out::println);
+
+        } else {
+            pessoas.values().stream().filter(p -> p instanceof Diretor).forEach(System.out::println);
         }
+
     }
 }

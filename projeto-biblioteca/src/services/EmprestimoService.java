@@ -57,9 +57,7 @@ public class EmprestimoService {
     }
 
     public void exibir() {
-        for (Emprestimo emprestimo : emprestimos) {
-            System.out.println(emprestimo);
-        }
+        emprestimos.forEach(System.out::println);
     }
 
     public void emprestar(Pessoa pessoa, Livro livro) {

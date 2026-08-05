@@ -69,9 +69,7 @@ public class LivroService {
     }
 
     public void exibir() {
-        for (Livro livro : livros.values()) {
-            System.out.println(livro);
-        }
+        livros.values().forEach(System.out::println);
     }
 
     public void adicionar(Livro livro) {
